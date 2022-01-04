@@ -1,6 +1,6 @@
 import chess
 
-from typing import Final
+import evaluation
 
 
 class GameState:
@@ -14,10 +14,9 @@ class GameState:
         """
         while not self.board.is_game_over():
             if self.board.turn == self.bot_color:
-                pass
-                # Do negamax and figure out a move
+                self.board.push(evaluation.calculate_move(self.board))
             else:
-                try_move = input(f"move {self.board.fullmove_number}:")
+                try_move = input(f"move {self.board.fullmove_number}: ")
                 try:
                     self.board.push_san(try_move)
                 except ValueError:

@@ -1,6 +1,6 @@
 import chess
 
-from typing import Dict, Generator, Final
+from typing import Dict, Generator, Final, Tuple
 
 KING_VALUE: Final[int] = 200
 QUEEN_VALUE: Final[int] = 9
@@ -19,11 +19,13 @@ PIECE_TYPE_VALUES: Final[Dict[chess.PieceType, int]] = {
 }
 
 
-def child_positions(board: chess.Board) -> Generator[chess.Board, None, None]:
+def child_positions(
+    board: chess.Board,
+) -> Generator[Tuple[chess.Board, chess.Move], None, None]:
     for move in board.legal_moves:
         new_board = board.copy(stack=False)  # Don't need to copy the move stack
         new_board.push(move)
-        yield new_board
+        yield new_board, move
 
 
 def piece_evaluation(
@@ -61,5 +63,22 @@ def negamax(board: chess.Board, depth: int = 3, color: chess.Color = None) -> in
         return (-1 * color) * evaluate(board)
 
     return max(
-        [-negamax(child, depth - 1, not color) for child in child_positions(board)]
+        [-negamax(child, depth - 1, not color) for child, _ in child_positions(board)]
     )
+
+
+def calculate_move(
+    board: chess.Board, depth: int = 3, color: chess.Color = None
+) -> chess.Move:
+    """
+    Uses the negamax algorithm to calculate a move to play in a chess game.
+    If color is not provided, will use the color to move of the board.
+    """
+    if color is None:
+        color = board.turn
+    max_move: chess.Move = chess.Move.null()
+    max_score: int = 0
+    for child, candidate_move in child_positions(board):
+        if negamax(child) > max_score:
+            max_move = candidate_move
+    return max_move
