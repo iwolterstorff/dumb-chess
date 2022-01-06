@@ -19,10 +19,13 @@ class GameState:
                 self.board.push(bots_move)
             else:
                 try_move = input(f"move {self.board.fullmove_number}: ")
-                try:
-                    self.board.push_san(try_move)
-                except ValueError:
-                    print("Illegal move. Try again")
+                if try_move == "b" or try_move == "board":
+                    print(self.board.unicode(borders=True))
+                else:
+                    try:
+                        self.board.push_san(try_move)
+                    except ValueError:
+                        print("Illegal move. Try again")
         print(self.board.outcome())
 
 
