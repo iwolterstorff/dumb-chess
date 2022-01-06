@@ -14,7 +14,9 @@ class GameState:
         """
         while not self.board.is_game_over():
             if self.board.turn == self.bot_color:
-                self.board.push(evaluation.calculate_move(self.board))
+                bots_move: chess.Move = evaluation.calculate_move(self.board)
+                print(self.board.san(bots_move))
+                self.board.push(bots_move)
             else:
                 try_move = input(f"move {self.board.fullmove_number}: ")
                 try:
@@ -27,9 +29,10 @@ class GameState:
 def setup_game() -> GameState:
     response: str = input("Play black or white? ")
     if response.lower() in ["black", "b"]:
-        return GameState(chess.BLACK)
-    elif response.lower() in ["white", "w"]:
+        # You have to pass the bot's color- opposite of the player's color
         return GameState(chess.WHITE)
+    elif response.lower() in ["white", "w"]:
+        return GameState(chess.BLACK)
     else:
         print("Specify a color for the bot to play: white/w or black/b")
         exit()

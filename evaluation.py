@@ -79,6 +79,7 @@ def calculate_move(
     max_move: chess.Move = chess.Move.null()
     max_score: int = 0
     for child, candidate_move in child_positions(board):
-        if negamax(child) > max_score:
-            max_move = candidate_move
+        print(negamax(child))
+        # if negamax(child) > max_score:
+        #    max_move = candidate_move
     return max_move
