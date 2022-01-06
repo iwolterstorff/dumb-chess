@@ -76,10 +76,8 @@ def calculate_move(
     """
     if color is None:
         color = board.turn
-    max_move: chess.Move = chess.Move.null()
-    max_score: int = 0
+    move_to_score: Dict[chess.Move, int] = {}
     for child, candidate_move in child_positions(board):
-        print(negamax(child))
-        # if negamax(child) > max_score:
-        #    max_move = candidate_move
+        move_to_score[candidate_move] = negamax(child)
+    max_move, _ = max(move_to_score.items(), key=lambda x: x[1])
     return max_move
